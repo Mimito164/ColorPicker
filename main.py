@@ -1,15 +1,14 @@
-from PIL import Image
 import PIL
 import PIL.ImageFile
-
-from rgb_to_hsv import rgb_to_hsv
-
+from PIL import Image
 import sys
 
-from string_to_color import string_to_color
+from rgb_to_hsv import rgb_to_hsv
 import filters
+import color_picker_algorithms as algorithms
 
-detected_colors = {}
+
+
 
 def open_image():
     if len(sys.argv) < 2:
@@ -20,7 +19,8 @@ def open_image():
     
     try:
         img = Image.open(img_path)
-        # img.load()
+        if(img.size > (256,256)):
+            img = Image.Image.resize(img, (256,256))
         img = img.convert("RGB")
         return img
     except:
@@ -51,25 +51,20 @@ def print_colors_dictionary(color_dict):
         print(f"{color}, {count}")
 
 
-def get_key_with_max_value(color_dict):
-    if not color_dict:  # Verificar si el diccionario está vacío
-        return None  # Retorna None si el diccionario está vacío
-
-    return max(color_dict, key=color_dict.get)
 
 def main():
     img = open_image()
 
     detected_colors = detect_colors(img)
 
+    detected_colors = filters.filter_garbage_pixels(detected_colors)
     detected_colors, grey_colors = filters.filter_grey(detected_colors)  # dentro de la funcion es un generator 
     print_colors_dictionary(detected_colors)
     print("grey_colors")
     print_colors_dictionary(grey_colors)
     img.show()
 
-    chosen_color = string_to_color(get_key_with_max_value(detected_colors))
-    print(chosen_color)
+    print(algorithms.sliding_h(detected_colors))
     
 if __name__ == "__main__":
     main()
