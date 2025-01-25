@@ -21,9 +21,9 @@ def sliding_h(color_dict:dict):
         )
     
     WINDOW = 10
-    print(sorted_items)
-    # for i in range(0,360,2):
-    #     sorted_items.ma   
+
+    for i in range(0,360,WINDOW):
+        filter()
 
 
 def algoritmo_custom(color_dict:dict):
