@@ -62,7 +62,6 @@ def main():
     print_colors_dictionary(detected_colors)
     print("grey_colors")
     print_colors_dictionary(grey_colors)
-    img.show()
 
     print(algorithms.sliding_h(detected_colors))
     
