@@ -1,4 +1,5 @@
 import numpy as np
+import CONSTANTS
 from string_to_color import string_to_color 
 
 def highest_appearance(color_dict:dict) -> tuple:
@@ -15,17 +16,6 @@ def _get_pixel_count_from_window(window_list:list):
 
 def weight_average(color_list):
     total_count = _get_pixel_count_from_window(color_list)
-
-    """
-    Blend HSV colors based on their appearance counts.
-
-    Args:
-        hsv_tuples (list of tuples): List of tuples in the format ((H, S, V), count).
-        total_count (float): Total sum of appearances.
-
-    Returns:
-        tuple: Blended HSV color as (H, S, V).
-    """
     # Initialize accumulators for Hue Cartesian components, Saturation, and Value
     x = 0.0
     y = 0.0
@@ -48,6 +38,23 @@ def weight_average(color_list):
 
     return h, s, v
 
+def _get_top_n_different_colors(list_of_windows, n=CONSTANTS.DIFERENT_COLORS):
+    different_colors = []
+    different_colors.append(list_of_windows[0])
+    h1,s1,v1 = weight_average(list_of_windows[0])
+
+    if len(different_colors) != n:    
+        for window in list_of_windows:
+            h2,s2,v2 = weight_average(window)
+            print("loop", h1, h2)
+            if abs(h1 - h2) > CONSTANTS.HUE_DIFFERENCE:
+                different_colors.append(window)
+                break
+
+    return different_colors
+    
+
+
 def sliding_h(color_dict:dict):
     
     color_list = list(map( 
@@ -61,18 +68,28 @@ def sliding_h(color_dict:dict):
         reverse=True
         )
     
-    WINDOW = 10
-
+    WINDOW = 1
+    STEP = 0.5
     list_of_windows = []
     
-    for i in range(0,360,WINDOW):
-        print(i, i+WINDOW)
+    for i in  np.arange(0.0, 360-WINDOW+STEP, STEP):
         colors_in_window = list (filter(lambda item: item[0][0] >= i and item[0][0] < i+WINDOW,sorted_items))
         if len(colors_in_window) > 0: 
             list_of_windows.append(colors_in_window)
     list_of_windows.sort(key=lambda window: _get_pixel_count_from_window(window), reverse=True)
-    print(*list_of_windows, sep='\n')
-    r = weight_average(list_of_windows[0])
+    # print(*list_of_windows[:10], sep='\n')
+    windows_selected = _get_top_n_different_colors(list_of_windows)
+    # r = weight_average(list_of_windows[0])
+    print(len(windows_selected))
+    print(len(list_of_windows))
+    r = weight_average( 
+            [
+                color 
+                for window in windows_selected 
+                for color in window
+            ]
+        )
+
     return r
 
 

@@ -1,5 +1,5 @@
 from string_to_color import string_to_color
-import filter_constants
+import CONSTANTS
 # def get_color(color_tuple:tuple) -> tuple:
 #     color_str = color_tuple[0]
 #     return string_to_color(color_str)
@@ -7,7 +7,7 @@ import filter_constants
 def _is_grey(hsv_color:tuple, grey_constant) -> bool:
     return hsv_color[1] < grey_constant
 
-def filter_grey(detected_colors:dict, grey_constant=filter_constants.GREY):
+def filter_grey(detected_colors:dict, grey_constant=CONSTANTS.GREY):
     grey_colors = {}
     non_grey_colors = {}
 
@@ -22,5 +22,5 @@ def filter_grey(detected_colors:dict, grey_constant=filter_constants.GREY):
 
 def filter_garbage_pixels(detected_colors:dict):
     return {
-        key: value for key, value in detected_colors.items() if value > filter_constants.GARBAGE
+        key: value for key, value in detected_colors.items() if value > CONSTANTS.GARBAGE
     }

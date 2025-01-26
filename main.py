@@ -64,6 +64,7 @@ def main():
     print_colors_dictionary(grey_colors)
 
     print(algorithms.sliding_h(detected_colors))
+    # img.show()
     
 if __name__ == "__main__":
     main()
