@@ -16,8 +16,11 @@ pip install -r requirements.txt
 python main_kmeans.py logos/nvidia.png
 ```
 
-- You can choose any image from logos directory or you can paste an url form internet
-
+- You can choose any image from `logos` directory 
+```bash
+python main_kmeans.py logos/tiktok.png
+```
+- Or you can paste an url form internet
 ```bash
 python main_kmeans.py https://www.criptonoticias.com/wp-content/uploads/2023/10/BC_Logo_.png
 ```
