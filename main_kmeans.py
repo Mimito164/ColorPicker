@@ -1,11 +1,29 @@
 from open_image import open_image
 from average_hsv import average_hsv
 from color_scanner import get_colors
-from CONSTANTS import GREY
+from CONSTANTS import GREY, WHITE_V,BLACK_V
 import color_picker_algorithms as algorithms
 import filters
 
-NUMBER_OF_CLUSTERS = 12
+NUMBER_OF_CLUSTERS = 100
+
+def filter_black_white(grey_colors:dict):
+    def _is_white(hsv_color:tuple, white_constant) -> bool:
+        return hsv_color[2] >= white_constant
+
+    def _is_black(hsv_color:tuple, black_constant) -> bool:
+        return hsv_color[2] <= black_constant
+    
+    white = [
+        color for color in grey_colors if _is_white(color, WHITE_V)
+    ]
+
+    black = [
+        color for color in grey_colors if _is_black(color, BLACK_V)
+    ]
+
+
+    return white, black
 
 def filter_grey(detected_colors:list):
     def _is_grey(hsv_color:tuple, grey_constant) -> bool:
@@ -64,16 +82,18 @@ def main():
 
         kluster_items = [len(kluster) for kluster in klusters]
         chosen_color_index = kluster_items.index(max(kluster_items))
-        chosen_color = klusters_centroids[chosen_color_index]
-        print(chosen_color)
+        H,S,V = klusters_centroids[chosen_color_index]
     else:
-        white,black = filters.filter_black_white(grey_colors)
-        white_pixels = sum([value for _,value in white.items()])
-        black_pixels = sum([value for _,value in black.items()])
+        white,black = filter_black_white(grey_colors)
+        white_pixels = len(white)
+        black_pixels = len(black)
+        print(white_pixels, black_pixels)
         if white_pixels > black_pixels:
-            chosen_color = algorithms.sliding_h(white,1)
+            H,S,V = average_hsv(white)
         else:
-            chosen_color = algorithms.sliding_h(black,1)
+            H,S,V = average_hsv(black)
+    print(f"h:{H}\ts:{S}\tv:{V}")
+    img.show()
 
 
 if __name__ == "__main__":
