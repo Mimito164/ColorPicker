@@ -61,7 +61,3 @@ def sliding_h(color_dict:dict, different_colors=CONSTANTS.DIFERENT_COLORS):
         ])
 
     return r
-
-
-def custom_algorithm(color_dict:dict):
-    sorted_items = sorted(color_dict.items(), key=lambda item: item[1], reverse=True) # sort by saturation
