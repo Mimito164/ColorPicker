@@ -29,9 +29,6 @@ def filter_garbage_pixels(detected_colors:dict):
     }
 
 def filter_black_white(grey_colors:dict):
-    white = {}
-    black = {}
-
     white = {
         key: value for key, value in grey_colors.items() if _is_white(string_to_color(key), CONSTANTS.WHITE_V)
     }
